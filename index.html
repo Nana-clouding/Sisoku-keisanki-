@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡単な計算機</title>
+    <style>
+        input {
+            width: 50px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>簡単な計算機</h2>
+    <form name="calculator">
+        <input type="number" name="num1" placeholder="数値1">
+        <select name="operation">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">×</option>
+            <option value="/">÷</option>
+        </select>
+        <input type="number" name="num2" placeholder="数値2">
+        <input type="button" value="計算" onclick="calculate()">
+    </form>
+    <p>結果: <span id="result"></span></p>
+
+    <script>
+        function calculate() {
+            var num1 = parseFloat(document.calculator.num1.value);
+            var operation = document.calculator.operation.value;
+            var num2 = parseFloat(document.calculator.num2.value);
+            var result;
+
+            switch(operation) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    if (num2 === 0) {
+                        result = 'エラー: 0で割れません';
+                    } else {
+                        result = num1 / num2;
+                    }
+                    break;
+                default:
+                    result = '無効な演算';
+            }
+
+            document.getElementById('result').textContent = result;
+        }
+    </script>
+</body>
+</html>
