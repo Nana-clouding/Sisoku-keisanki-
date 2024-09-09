@@ -3,30 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>簡単な計算機</title>
+    <title>高機能計算機</title>
     <style>
-        input {
-            width: 50px;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .calculator {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            width: 70px;
+            padding: 10px;
             margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <h2>簡単な計算機</h2>
-    <form name="calculator">
-        <input type="number" name="num1" placeholder="数値1">
-        <select name="operation">
-            <option value="+">+</option>
-            <option value="-">-</option>
-            <option value="*">×</option>
-            <option value="/">÷</option>
-        </select>
-        <input type="number" name="num2" placeholder="数値2">
-        <input type="button" value="計算" onclick="calculate()">
-    </form>
-    <p>結果: <span id="result"></span></p>
+    <div class="calculator">
+        <h2>高機能計算機</h2>
+        <form name="calculator">
+            <input type="number" name="num1" placeholder="数値1">
+            <select name="operation">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">×</option>
+                <option value="/">÷</option>
+                <option value="^">^ (指数)</option>
+            </select>
+            <input type="number" name="num2" placeholder="数値2">
+            <button type="button" onclick="calculate()">計算</button>
+        </form>
+        <p id="result">結果: </p>
+    </div>
 
     <script>
+        function gcd(a, b) {
+            return b ? gcd(b, a % b) : Math.abs(a);
+        }
+
+        function lcm(a, b) {
+            return Math.abs(a * b) / gcd(a, b);
+        }
+
+        function reduceFraction(numerator, denominator) {
+            let divisor = gcd(numerator, denominator);
+            return [numerator / divisor, denominator / divisor];
+        }
+
+        function addFractions(n1, d1, n2, d2) {
+            let commonDenominator = lcm(d1, d2);
+            let newNumerator1 = n1 * (commonDenominator / d1);
+            let newNumerator2 = n2 * (commonDenominator / d2);
+            let finalNumerator = newNumerator1 + newNumerator2;
+            return reduceFraction(finalNumerator, commonDenominator);
+        }
+
         function calculate() {
             var num1 = parseFloat(document.calculator.num1.value);
             var operation = document.calculator.operation.value;
@@ -47,14 +102,18 @@
                     if (num2 === 0) {
                         result = 'エラー: 0で割れません';
                     } else {
-                        result = num1 / num2;
+                        let fraction = reduceFraction(num1, num2);
+                        result = `${fraction[0]} / ${fraction[1]} (約分済み: ${num1 / num2})`;
                     }
+                    break;
+                case '^':
+                    result = Math.pow(num1, num2);
                     break;
                 default:
                     result = '無効な演算';
             }
 
-            document.getElementById('result').textContent = result;
+            document.getElementById('result').textContent = "結果: " + result;
         }
     </script>
 </body>
